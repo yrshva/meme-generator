@@ -2,16 +2,23 @@ import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import { StyleSheet } from "react-native";
 import React from "react";
 
-type IconName = "house" | "user" | "pencil";
+type IconName =
+  | "house"
+  | "user"
+  | "pencil"
+  | "rotate-right"
+  | "arrow-up-from-bracket"
+  | "share"
+  | "share-from-square";
 
 type Props = {
   name: IconName;
-  size: number;
+  size?: number;
   type?: "solid" | "light";
   color?: string;
 };
 
-const Icon = ({ name, size, type, color }: Props) => {
+const Icon = ({ name, size = 18, type, color }: Props) => {
   return (
     <FontAwesome6
       name={name}
