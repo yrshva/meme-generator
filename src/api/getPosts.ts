@@ -1,4 +1,3 @@
-import { Platform } from "react-native";
 import config from "./config";
 
 export interface Post {
@@ -8,11 +7,8 @@ export interface Post {
 }
 
 const getPosts = async () => {
-  const url =
-    Platform.OS === "android" ? config.ANDROID_API_URL : config.IOS_API_URL;
-
-  const response = fetch(`${url}/posts`, { method: "GET" }).then(response =>
-    response.json(),
+  const response = fetch(`${config.API_URL}/posts`, { method: "GET" }).then(
+    response => response.json(),
   );
 
   return (await response) as Promise<Array<Post>>;

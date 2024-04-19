@@ -12,6 +12,11 @@ const colors = {
   secondary_lighter_x: "#FFDCCC",
   secondary_light: "#EAF3FC",
   base: "#FFFFFF",
+  notification: {
+    error: "#F28781",
+    success: "#A5F0B0",
+    info: "#BDE0E4",
+  },
 };
 
 export default colors;
