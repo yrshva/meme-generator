@@ -3,11 +3,12 @@ import { StyleSheet } from "react-native";
 import React from "react";
 
 type IconName =
+  | "arrow-up-from-bracket"
+  | "circle-xmark"
   | "house"
   | "user"
   | "pencil"
   | "rotate-right"
-  | "arrow-up-from-bracket"
   | "share"
   | "share-from-square";
 

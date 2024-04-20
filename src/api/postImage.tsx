@@ -1,6 +1,6 @@
 import config from "./config";
 
-interface Image {
+export interface PostImage {
   uri: string;
   type: string;
   name: string;
@@ -8,7 +8,7 @@ interface Image {
 
 export interface PostImageParams {
   user: string;
-  image: Image;
+  image: PostImage;
 }
 
 const postImage = ({ user, image }: PostImageParams) => {

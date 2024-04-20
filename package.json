@@ -10,8 +10,7 @@
     "setup": "yarn install && cd server && yarn install && cd ..",
     "start": "react-native start",
     "test": "jest",
-    "server": "npx json-server db.json --port 3030",
-    "start:server": "cd server && yarn start && cd .."
+    "server": "cd server && yarn start && cd .."
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.20",

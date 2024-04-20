@@ -17,14 +17,14 @@ const getPosts = () => {
   return posts.map(post => ({
     id: post.id,
     username: post.username,
-    image: post.image ? post.image.toString("base64") : null, // Convert image data to base64
+    image: post.image ? post.image.toString("base64") : null,
   }));
 };
 
 const deletePost = postId => {
   const deleteQuery = db.prepare("DELETE FROM posts WHERE id = ?");
   const result = deleteQuery.run(postId);
-  return result.changes > 0; // Returns true if a post was deleted
+  return result.changes > 0;
 };
 
 module.exports = { createPost, getPosts, deletePost };

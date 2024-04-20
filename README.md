@@ -25,7 +25,7 @@ yarn start
 To start the server run
 
 ```bash
-yarn start:server
+yarn server
 ```
 
 ## Step 3: Start your Application

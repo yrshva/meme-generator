@@ -4,19 +4,13 @@ import { Post } from "../../../api/getPosts";
 import colors from "../../../theme/colors";
 import fontSizes from "../../../theme/fontSizes";
 import spacing from "../../../theme/spacing";
-import { ShareButton } from "../../../components/Button";
 
-const PostItem = ({ author, imgUrl }: Post) => {
+const PostItem = ({ username, image }: Post) => {
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: imgUrl }}
-        style={styles.image}
-        resizeMode="contain"
-      />
       <View style={styles.detailsContainer}>
-        <Text style={styles.author}>Created by: {author}</Text>
-        <ShareButton url={imgUrl} />
+        <Text style={styles.author}>Created by: {username}</Text>
+        {/* <ShareButton url={imgUrl} /> */}
       </View>
     </View>
   );

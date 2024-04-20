@@ -2,8 +2,8 @@ import config from "./config";
 
 export interface Post {
   id: number;
-  author: string;
-  imgUrl: string;
+  username: string;
+  image: string;
 }
 
 const getPosts = async () => {
