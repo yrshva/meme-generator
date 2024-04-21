@@ -74,6 +74,7 @@ export const Button: React.FC<ButtonProps> = ({
           : variant === "primary"
           ? colors.primary_lighter_x
           : undefined,
+        opacity: disabled ? 0.4 : 1,
         ...style,
       })}
       disabled={disabled}

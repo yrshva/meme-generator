@@ -1,15 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
-import { Platform, ScrollView, StyleSheet, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { request, PERMISSIONS } from "react-native-permissions";
 import Toast from "react-native-toast-message";
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 
 import spacing from "../../theme/spacing";
-import postImage, { PostImage, PostImageParams } from "../../api/postImage";
 import ImageLoader from "./components/ImageLoader";
-import deletePost, { DeletePostParams } from "../../api/deletePost";
-import { Button, CloseButton } from "../../components/Button";
+import { Button } from "../../components/Button";
 import colors from "../../theme/colors";
 import TextEditor from "./components/TextEditor";
 
@@ -17,6 +14,7 @@ const CreateScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageUri, setImageUri] = useState<null | string>(null);
   const [isTextEditorOpen, setIsTextEditorOpen] = useState(false);
+  const [textInput, setTextInput] = useState("");
 
   const handleUpload = () => {
     setIsLoading(true);
@@ -72,12 +70,15 @@ const CreateScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: colors.base }}>
       <ScrollView contentContainerStyle={styles.container}>
-        <View>
+        <View style={styles.imageContainer}>
           <ImageLoader
             onUpload={onUploadPress}
             isLoading={isLoading}
             uri={imageUri}
           />
+          {textInput.length ? (
+            <Text style={styles.text}>{textInput}</Text>
+          ) : null}
         </View>
         <Button
           text="Add text"
@@ -85,14 +86,17 @@ const CreateScreen = () => {
             setIsTextEditorOpen(true);
           }}
           style={styles.uploadButton}
+          disabled={!imageUri}
         />
         <Button
           text="Remove"
           onPress={() => {
+            setTextInput("");
             setImageUri(null);
           }}
           style={styles.uploadButton}
           variant="secondary"
+          disabled={!imageUri}
         />
       </ScrollView>
       <TextEditor
@@ -100,6 +104,8 @@ const CreateScreen = () => {
         onClose={() => {
           setIsTextEditorOpen(false);
         }}
+        textInput={textInput}
+        setTextInput={value => setTextInput(value)}
       />
     </View>
   );
@@ -118,5 +124,21 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: spacing.l,
     right: spacing.m,
+  },
+  text: {
+    position: "absolute",
+    fontSize: 24,
+    padding: spacing.s,
+    textShadowColor: colors.main,
+    textShadowRadius: 2,
+    textShadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    color: colors.base,
+  },
+  imageContainer: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

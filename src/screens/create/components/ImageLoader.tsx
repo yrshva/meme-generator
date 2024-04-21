@@ -33,13 +33,19 @@ const styles = StyleSheet.create({
   imageSkeleton: {
     minHeight: 300,
     backgroundColor: colors.primary_light,
+    borderColor: colors.primary_light,
+    borderWidth: 1,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
   },
   image: {
     flex: 1,
     width: "100%",
     minHeight: 300,
+    borderColor: colors.primary_light,
+    borderRadius: 10,
+    borderWidth: 1,
   },
 });
