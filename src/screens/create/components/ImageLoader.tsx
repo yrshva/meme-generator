@@ -1,15 +1,49 @@
-import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Platform,
+  StyleSheet,
+  View,
+} from "react-native";
+import Toast from "react-native-toast-message";
 import React from "react";
+
 import colors from "../../../theme/colors";
 import { Button } from "../../../components/Button";
+import { PERMISSIONS, request } from "react-native-permissions";
 
 interface ImageLoaderProps {
-  onUpload: () => void;
+  handleUpload: () => void;
   uri: string | null;
   isLoading: boolean;
 }
 
-const ImageLoader = ({ onUpload, uri, isLoading }: ImageLoaderProps) => {
+const ImageLoader = ({ handleUpload, uri, isLoading }: ImageLoaderProps) => {
+  const onUploadPress = () => {
+    if (
+      (Platform.OS === "ios" && PERMISSIONS.IOS.MEDIA_LIBRARY) ||
+      (Platform.OS === "android" && PERMISSIONS.ANDROID.ACCESS_MEDIA_LOCATION)
+    ) {
+      return handleUpload();
+    }
+
+    request(PERMISSIONS.IOS.PHOTO_LIBRARY)
+      .then(permission => {
+        if (permission === "granted") {
+          return handleUpload();
+        }
+        throw new Error("Permissions Required");
+      })
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: "Permissions Required",
+          text2:
+            "You need to give us access to your photo library in order to upload an image",
+        });
+      });
+  };
+
   if (isLoading) {
     return (
       <View style={styles.imageSkeleton}>
@@ -22,7 +56,7 @@ const ImageLoader = ({ onUpload, uri, isLoading }: ImageLoaderProps) => {
   }
   return (
     <View style={styles.imageSkeleton}>
-      <Button onPress={onUpload} text="Upload" variant="secondary" />
+      <Button onPress={onUploadPress} text="Upload" variant="secondary" />
     </View>
   );
 };

@@ -23,9 +23,16 @@ type Props = {
   textInput: string;
   onClose: () => void;
   setTextInput: (value: string) => void;
+  onSave: () => void;
 };
 
-const TextEditor = ({ visible, textInput, onClose, setTextInput }: Props) => {
+const TextEditor = ({
+  visible,
+  textInput,
+  onClose,
+  setTextInput,
+  onSave,
+}: Props) => {
   const [modalContentY, setModalContentY] = useState(0);
   const insets = useSafeAreaInsets();
   const inputRef = useRef<TextInput>(null);
@@ -52,10 +59,7 @@ const TextEditor = ({ visible, textInput, onClose, setTextInput }: Props) => {
                 [
                   {
                     text: "Yes",
-                    onPress: () => {
-                      onClose();
-                      setTextInput("");
-                    },
+                    onPress: onClose,
                     style: "destructive",
                   },
                   {
@@ -67,7 +71,6 @@ const TextEditor = ({ visible, textInput, onClose, setTextInput }: Props) => {
             }
 
             onClose();
-            setTextInput("");
           }
         }}>
         <KeyboardAvoidingView
@@ -97,7 +100,7 @@ const TextEditor = ({ visible, textInput, onClose, setTextInput }: Props) => {
                 multiline
               />
               <Button
-                onPress={onClose}
+                onPress={onSave}
                 text="Save"
                 variant="secondary"
                 style={styles.saveButton}
