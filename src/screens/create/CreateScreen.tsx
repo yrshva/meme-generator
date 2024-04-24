@@ -64,8 +64,15 @@ const CreateScreen = () => {
         ) : null}
         <AddedTexts
           addedTexts={addedTexts}
-          amendText={(value: AddedText) =>
-            setAddedTexts(prev => [...prev, value])
+          amendText={(newText: AddedText) =>
+            setAddedTexts(prev =>
+              prev.map(oldText =>
+                oldText.id === newText.id ? newText : oldText,
+              ),
+            )
+          }
+          removeText={(removedText: AddedText) =>
+            setAddedTexts(prev => prev.filter(item => item !== removedText))
           }
         />
       </CaptureMeme>
@@ -121,6 +128,7 @@ const CreateScreen = () => {
           setTextInput("");
           setIsTextEditorOpen(false);
         }}
+        onRemove={() => setTextInput("")}
       />
     </View>
   );
@@ -135,7 +143,8 @@ const styles = StyleSheet.create({
   text: {
     position: "absolute",
     fontSize: 24,
-    padding: spacing.s,
+    padding: spacing.m,
+    paddingStart: spacing.xl,
     textShadowColor: colors.main,
     textShadowRadius: 2,
     textShadowOffset: {
@@ -143,5 +152,6 @@ const styles = StyleSheet.create({
       height: 2,
     },
     color: colors.base,
+    zIndex: 100,
   },
 });

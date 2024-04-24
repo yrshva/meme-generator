@@ -24,6 +24,7 @@ type Props = {
   onClose: () => void;
   setTextInput: (value: string) => void;
   onSave: () => void;
+  onRemove: () => void;
 };
 
 const TextEditor = ({
@@ -32,10 +33,12 @@ const TextEditor = ({
   onClose,
   setTextInput,
   onSave,
+  onRemove,
 }: Props) => {
   const [modalContentY, setModalContentY] = useState(0);
   const insets = useSafeAreaInsets();
   const inputRef = useRef<TextInput>(null);
+  const maxLines = 6;
 
   useEffect(() => {
     if (visible) {
@@ -94,17 +97,25 @@ const TextEditor = ({
                 value={textInput}
                 ref={inputRef}
                 onChangeText={value => {
-                  setTextInput(value);
+                  const lines = value.split("\n");
+                  if (lines.length <= maxLines) {
+                    setTextInput(value);
+                  }
                 }}
-                numberOfLines={6}
+                numberOfLines={maxLines}
                 multiline
               />
               <Button
                 onPress={onSave}
                 text="Save"
-                variant="secondary"
                 style={styles.saveButton}
                 disabled={textInput.length < 1}
+              />
+              <Button
+                onPress={onRemove}
+                text="Remove"
+                variant="secondary"
+                style={styles.removeButton}
               />
             </ScrollView>
           </View>
@@ -138,6 +149,9 @@ const styles = StyleSheet.create({
     marginTop: spacing.m,
   },
   saveButton: {
+    marginTop: spacing.l,
+  },
+  removeButton: {
     marginTop: spacing.l,
   },
 });

@@ -13,15 +13,25 @@ export interface AddedText {
 interface Props {
   addedTexts: Array<AddedText>;
   amendText: (value: AddedText) => void;
+  removeText: (value: AddedText) => void;
 }
 
-const AddedTexts = ({ addedTexts, amendText }: Props) => {
+const AddedTexts = ({ addedTexts, amendText, removeText }: Props) => {
   if (!addedTexts.length) {
     return null;
   }
 
   return addedTexts.map(item => (
-    <DraggableText key={item.id} text={item.text} />
+    <DraggableText
+      key={item.id}
+      text={item.text}
+      editText={newText => {
+        amendText({ ...item, text: newText });
+      }}
+      removeText={() => {
+        removeText(item);
+      }}
+    />
   ));
 };
 
