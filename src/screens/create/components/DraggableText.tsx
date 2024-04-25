@@ -70,6 +70,7 @@ const DraggableText = ({ text, editText, removeText }: Props) => {
         visible={isTextEditorOpen}
         onClose={() => {
           setIsTextEditorOpen(false);
+          setTextInput(text);
         }}
         textInput={textInput}
         setTextInput={value => setTextInput(value)}

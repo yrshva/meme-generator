@@ -1,3 +1,4 @@
+import { PERMISSIONS, request } from "react-native-permissions";
 import {
   ActivityIndicator,
   Image,
@@ -10,7 +11,7 @@ import React from "react";
 
 import colors from "../../../theme/colors";
 import { Button } from "../../../components/Button";
-import { PERMISSIONS, request } from "react-native-permissions";
+import requestReadPermissions from "../../../helpers/requestReadPermissions";
 
 interface ImageLoaderProps {
   handleUpload: () => void;
@@ -19,27 +20,15 @@ interface ImageLoaderProps {
 }
 
 const ImageLoader = ({ handleUpload, uri, isLoading }: ImageLoaderProps) => {
-  const onUploadPress = () => {
-    if (
-      (Platform.OS === "ios" && PERMISSIONS.IOS.MEDIA_LIBRARY) ||
-      (Platform.OS === "android" && PERMISSIONS.ANDROID.ACCESS_MEDIA_LOCATION)
-    ) {
-      return handleUpload();
-    }
-
-    request(PERMISSIONS.IOS.PHOTO_LIBRARY)
-      .then(permission => {
-        if (permission === "granted") {
-          return handleUpload();
-        }
-        throw new Error("Permissions Required");
-      })
+  const onUploadPress = async () => {
+    return requestReadPermissions()
+      .then(handleUpload)
       .catch(() => {
         Toast.show({
           type: "error",
           text1: "Permissions Required",
           text2:
-            "You need to give us access to your photo library in order to upload an image",
+            "You need to give us access to your media library in order to upload an image",
         });
       });
   };
@@ -73,13 +62,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+    maxWidth: 450,
   },
   image: {
     flex: 1,
-    width: "100%",
-    minHeight: 300,
     borderColor: colors.primary_light,
     borderRadius: 10,
     borderWidth: 1,
+    maxWidth: 450,
   },
 });

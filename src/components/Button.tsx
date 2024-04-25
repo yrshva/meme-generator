@@ -1,8 +1,15 @@
-import { Pressable, Share, Text, ViewStyle } from "react-native";
-import Icon from "./Icon";
+import {
+  ActivityIndicator,
+  Pressable,
+  Share,
+  Text,
+  ViewStyle,
+} from "react-native";
+
 import colors from "../theme/colors";
 import spacing from "../theme/spacing";
 import fontSizes from "../theme/fontSizes";
+import Icon from "./Icon";
 
 interface ShareButtonProps {
   message?: string;
@@ -52,6 +59,7 @@ interface ButtonProps {
   text?: string;
   variant?: "primary" | "secondary";
   disabled?: boolean;
+  loading?: boolean;
   onPress: () => void;
 }
 
@@ -60,6 +68,7 @@ export const Button: React.FC<ButtonProps> = ({
   text,
   variant = "primary",
   disabled,
+  loading,
   onPress,
 }) => {
   return (
@@ -79,7 +88,13 @@ export const Button: React.FC<ButtonProps> = ({
       })}
       disabled={disabled}
       onPress={onPress}>
-      <Text style={{ textAlign: "center", fontSize: fontSizes.m }}>{text}</Text>
+      {loading ? (
+        <ActivityIndicator size="small" />
+      ) : (
+        <Text style={{ textAlign: "center", fontSize: fontSizes.m }}>
+          {text}
+        </Text>
+      )}
     </Pressable>
   );
 };

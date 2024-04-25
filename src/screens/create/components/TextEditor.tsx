@@ -1,5 +1,6 @@
 import {
   Alert,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -24,7 +25,7 @@ type Props = {
   onClose: () => void;
   setTextInput: (value: string) => void;
   onSave: () => void;
-  onRemove: () => void;
+  onRemove?: () => void;
 };
 
 const TextEditor = ({
@@ -36,9 +37,27 @@ const TextEditor = ({
   onRemove,
 }: Props) => {
   const [modalContentY, setModalContentY] = useState(0);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
   const insets = useSafeAreaInsets();
   const inputRef = useRef<TextInput>(null);
   const maxLines = 6;
+
+  useEffect(() => {
+    const keyboardWillShowListener = Keyboard.addListener(
+      "keyboardWillShow",
+      () => setIsKeyboardVisible(true),
+    );
+    const keyboardWillHideListener = Keyboard.addListener(
+      "keyboardWillHide",
+      () => setIsKeyboardVisible(false),
+    );
+
+    return () => {
+      keyboardWillShowListener.remove();
+      keyboardWillHideListener.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (visible) {
@@ -49,7 +68,7 @@ const TextEditor = ({
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       onRequestClose={onClose}>
       <TouchableWithoutFeedback
@@ -87,10 +106,10 @@ const TextEditor = ({
             <ScrollView
               contentContainerStyle={{
                 padding: spacing.l,
-                paddingBottom: insets.bottom ?? spacing.l,
+                paddingBottom:
+                  spacing.l + (isKeyboardVisible ? 0 : insets.bottom),
               }}
               keyboardShouldPersistTaps="handled">
-              <Text style={styles.title}>Text editor</Text>
               <TextInput
                 placeholder="Enter text"
                 style={styles.input}
@@ -111,12 +130,14 @@ const TextEditor = ({
                 style={styles.saveButton}
                 disabled={textInput.length < 1}
               />
-              <Button
-                onPress={onRemove}
-                text="Remove"
-                variant="secondary"
-                style={styles.removeButton}
-              />
+              {onRemove && (
+                <Button
+                  onPress={onRemove}
+                  text="Remove"
+                  variant="secondary"
+                  style={styles.removeButton}
+                />
+              )}
             </ScrollView>
           </View>
         </KeyboardAvoidingView>
@@ -136,9 +157,6 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     backgroundColor: colors.primary_light,
-  },
-  title: {
-    fontSize: fontSizes.l,
   },
   input: {
     padding: spacing.m,

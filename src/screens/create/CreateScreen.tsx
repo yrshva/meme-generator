@@ -1,16 +1,17 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
+import { captureRef } from "react-native-view-shot";
 import Toast from "react-native-toast-message";
-import ViewShot from "react-native-view-shot";
 import React, { useRef, useState } from "react";
 
 import spacing from "../../theme/spacing";
 import ImageLoader from "./components/ImageLoader";
 import { Button } from "../../components/Button";
 import colors from "../../theme/colors";
+import { useSubmitPostMutation } from "../../api/queryMutations";
 import TextEditor from "./components/TextEditor";
 import AddedTexts, { AddedText } from "./components/AddedTexts";
-import CaptureMeme from "./components/CaptureMeme";
+import requestReadPermissions from "../../helpers/requestReadPermissions";
 
 const CreateScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +19,8 @@ const CreateScreen = () => {
   const [isTextEditorOpen, setIsTextEditorOpen] = useState(false);
   const [textInput, setTextInput] = useState("");
   const [addedTexts, setAddedTexts] = useState<Array<AddedText>>([]);
-  const captureRef = useRef<ViewShot>(null);
+  const ref = useRef<View>(null);
+  const submitPostMutation = useSubmitPostMutation();
 
   const handleUpload = () => {
     setIsLoading(true);
@@ -46,6 +48,34 @@ const CreateScreen = () => {
       .finally(() => setIsLoading(false));
   };
 
+  const handlePublish = () => {
+    const user = "crazyfrog";
+    captureRef(ref)
+      .then(uri => {
+        submitPostMutation
+          .mutateAsync({
+            user,
+            image: {
+              uri: uri,
+              type: "image/png",
+              name: `${user}-${Date.now()}`,
+            },
+          })
+          .then(() => {
+            Toast.show({
+              type: "success",
+              text2: "Succesfully published",
+            });
+          });
+      })
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text2: "There was an error publishing your post",
+        });
+      });
+  };
+
   return (
     <View
       style={{
@@ -53,7 +83,7 @@ const CreateScreen = () => {
         backgroundColor: colors.base,
         paddingVertical: spacing.l,
       }}>
-      <CaptureMeme captureRef={captureRef}>
+      <View ref={ref} style={styles.captureContainer}>
         <ImageLoader
           handleUpload={handleUpload}
           isLoading={isLoading}
@@ -75,10 +105,8 @@ const CreateScreen = () => {
             setAddedTexts(prev => prev.filter(item => item !== removedText))
           }
         />
-      </CaptureMeme>
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingHorizontal: spacing.l }}>
+      </View>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.l }}>
         <Button
           text="Add text"
           onPress={() => {
@@ -101,12 +129,13 @@ const CreateScreen = () => {
       </ScrollView>
       <Button
         text="Publish"
-        onPress={() => {
+        onPress={async () => {
           if (imageUri) {
-            captureRef.current?.capture?.();
+            handlePublish();
           }
         }}
         style={{ marginHorizontal: spacing.l }}
+        loading={submitPostMutation.isPending}
         disabled={!imageUri}
       />
       <TextEditor
@@ -128,7 +157,6 @@ const CreateScreen = () => {
           setTextInput("");
           setIsTextEditorOpen(false);
         }}
-        onRemove={() => setTextInput("")}
       />
     </View>
   );
@@ -153,5 +181,10 @@ const styles = StyleSheet.create({
     },
     color: colors.base,
     zIndex: 100,
+  },
+  captureContainer: {
+    justifyContent: "center",
+    paddingHorizontal: spacing.l,
+    height: 300,
   },
 });
