@@ -11,7 +11,6 @@ import colors from "../../theme/colors";
 import { useSubmitPostMutation } from "../../api/queryMutations";
 import TextEditor from "./components/TextEditor";
 import AddedTexts, { AddedText } from "./components/AddedTexts";
-import requestReadPermissions from "../../helpers/requestReadPermissions";
 
 const CreateScreen = () => {
   const [isLoading, setIsLoading] = useState(false);

@@ -1,11 +1,4 @@
-import { PERMISSIONS, request } from "react-native-permissions";
-import {
-  ActivityIndicator,
-  Image,
-  Platform,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 import React from "react";
 

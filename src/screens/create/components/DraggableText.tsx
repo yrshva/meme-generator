@@ -10,7 +10,6 @@ import React, { Fragment, useRef, useState } from "react";
 import colors from "../../../theme/colors";
 import spacing from "../../../theme/spacing";
 import TextEditor from "./TextEditor";
-import { AddedText } from "./AddedTexts";
 
 type Props = {
   text: string;
